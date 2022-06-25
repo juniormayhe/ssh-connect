@@ -1,0 +1,8 @@
+credentials:
+  - name: azure
+    path: /home/user/ssh-key.pem
+    userandserver: <user>@<ipaddress>
+  - name: amazon
+    path: /home/user/ssh-key.pem
+    userandserver: <user>@<ipaddress>
+  
