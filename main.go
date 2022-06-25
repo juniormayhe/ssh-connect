@@ -20,12 +20,12 @@ type Credential struct {
 }
 
 type Config struct {
-	//Credentials map[string][]Credential
 	Credentials []Credential
 }
 
 func main() {
-	fmt.Println("ssh-connect\n")
+	fmt.Println("ssh-connect")
+	fmt.Println()
 
 	config, err := readConfig()
 	if err != nil {
@@ -53,16 +53,7 @@ func main() {
 	path = normalizePath(path)
 	userAndServer := fmt.Sprintf("%v", config.Credentials[n].UserAndServer)
 
-	var cmd *exec.Cmd
-	if getPathFormat() == "linux" {
-		cmd = exec.Command("bash", "-c", "ssh -i "+path+" "+userAndServer+" -o StrictHostKeyChecking=no")
-	} else {
-		cmd = exec.Command("ssh", "-i", path, userAndServer, "-o", "StrictHostKeyChecking=no")
-	}
-
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
+	cmd := getCommand(path, userAndServer)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
@@ -85,6 +76,20 @@ func main() {
 		fmt.Println("Done!")
 	}
 
+}
+
+func getCommand(path string, userAndServer string) *exec.Cmd {
+	var cmd *exec.Cmd
+	if getPathFormat() == "linux" {
+		cmd = exec.Command("bash", "-c", "ssh -i "+path+" "+userAndServer+" -o StrictHostKeyChecking=no")
+	} else {
+		cmd = exec.Command("ssh", "-i", path, userAndServer, "-o", "StrictHostKeyChecking=no")
+	}
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	return cmd
 }
 
 func readConfig() (Config, error) {
