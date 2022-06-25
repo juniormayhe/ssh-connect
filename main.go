@@ -93,7 +93,7 @@ func getCommand(path string, userAndServer string) *exec.Cmd {
 }
 
 func readConfig() (Config, error) {
-	filename, _ := filepath.Abs("./ssh-keys.yaml")
+	filename, _ := filepath.Abs("./my-keys.yaml")
 	yamlFile, err := ioutil.ReadFile(filename)
 
 	if err != nil {
